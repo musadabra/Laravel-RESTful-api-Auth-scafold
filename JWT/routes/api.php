@@ -8,8 +8,7 @@ use App\Http\Controllers\API\ProjectController;
 use App\Http\Controllers\API\TaskController;
 use App\Http\Controllers\API\LabelController;
 use App\Http\Controllers\API\SearchController;
-
-
+use App\Http\Controllers\API\Auth\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,9 +28,21 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 // ROUTES
 
+//AUTHENTICATION USING JWT
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+
+], function ($router) {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/refresh', [AuthController::class, 'refresh']);
+    Route::get('/user-profile', [AuthController::class, 'userProfile']);
+});
+
 // PROJECT RESOURCES
 // Route::apiResource('projects', ProjectController::class)->middleware('auth:api');
-
 Route::apiResource('projects', ProjectController::class);
 Route::apiResource('tasks', TaskController::class);
 Route::apiResource('labels', LabelController::class);
